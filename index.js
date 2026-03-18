@@ -23,6 +23,25 @@ app.get('/', (req, res) => {
 
 });
 
+app.get('/files/:filename',(req,res)=>{
+    fs.readFile(`./files/${req.params.filename}`, 'utf-8', (err,data)=>{
+        res.render('read',{filename: req.params.filename, filedata: data});
+    })
+});
+
+
+
+app.post('/create', (req, res) => {
+    
+
+ fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.details, (err) => {
+    if (err) throw err;
+    res.redirect('/');
+});
+
+});
+
+
 app.listen(3000,()=>{
     console.log('Server is running on port 3000');
 })
