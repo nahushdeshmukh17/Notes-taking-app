@@ -2,6 +2,7 @@ const express = require('express');
 const app=  express();
 const path = require('path');
 const fs= require('fs');
+const http = require('http');
 
 
 app.set('view engine', 'ejs');
@@ -30,10 +31,20 @@ app.get('/files/:filename',(req,res)=>{
 });
 
 
+app.get('/edit/:filename',(req,res)=>{
 
-app.post('/create', (req, res) => {
-    
+    res.render('edit',{filename: req.params.filename});
+});
 
+app.post('/edit',(req,res)=>{
+
+    fs.rename(`./files/${req.body.old}`, `./files/${req.body.new}.txt`, (err)=>{
+    res.redirect('/');
+})
+});
+
+
+app.post('/create', (req, res) => {    
  fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.details, (err) => {
     if (err) throw err;
     res.redirect('/');
@@ -44,4 +55,4 @@ app.post('/create', (req, res) => {
 
 app.listen(3000,()=>{
     console.log('Server is running on port 3000');
-})
+});
